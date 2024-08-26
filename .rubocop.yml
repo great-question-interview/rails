@@ -1,0 +1,87 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - standard
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-minitest
+
+inherit_gem:
+  standard: config/base.yml
+
+AllCops:
+  TargetRubyVersion: 3.2.2
+  NewCops: enable
+  Exclude:
+    - bin/**/*
+    - db/salesforce_schema.rb
+    - db/schema.rb
+    - node_modules/**/*
+    - public/**/*
+    - vendor/**/*
+
+Rails:
+  Enabled: true
+
+Performance:
+  Enabled: true
+
+Minitest:
+  Enabled: true
+
+# This cop provides an optimization to not evaluate Rails.logger.debug messages
+# if the log level is not set to debug. However, this optimization is not that significant and
+# the downside is that now your test suite can't catch bugs where you are logging something
+# with an error like a wrong variable name.
+Rails/EagerEvaluationLogMessage:
+  Enabled: false
+
+# Override standard.rb settings and return to rubocop default for Style/StringLiterals
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: single_quotes
+  ConsistentQuotesInMultiline: false
+
+# Override standard.rb settings and return to rubocop default for Style/StringLiteralsInInterpolation
+Style/StringLiteralsInInterpolation:
+  Enabled: true
+  EnforcedStyle: single_quotes
+
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - staging
+    - test
+    - ned
+
+# Temporarily disable check for over 3 assertions per test
+Minitest/MultipleAssertions:
+  Enabled: false
+
+# System tests define some helpers that include assertions.
+# Rubocop thinks they should be tests.
+Minitest/TestMethodName:
+  Exclude:
+    - test/system/**/*
+
+Rails/OutputSafety:
+  Exclude:
+    - config/initializers/form_errors.rb
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Style/RedundantException:
+  Enabled: false
+
+Lint/SuppressedException:
+  Enabled: true
+  AllowComments: false
+  AllowNil: false
